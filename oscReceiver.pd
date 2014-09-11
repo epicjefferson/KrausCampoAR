@@ -1,9 +1,10 @@
 #N canvas 1185 209 450 300 10;
 #X declare -lib mrpeach;
 #X obj 227 39 import mrpeach;
-#X obj 21 107 print;
-#X obj 79 136 OSCroute;
 #X obj 68 71 unpackOSC;
 #X obj 66 42 udpreceive 44000;
-#X connect 3 0 1 0;
-#X connect 4 0 3 0;
+#X obj 123 110 OSCroute /blobs;
+#X obj 71 152 print;
+#X connect 1 0 3 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
