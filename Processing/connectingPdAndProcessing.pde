@@ -1,4 +1,4 @@
-mport oscP5.*;
+import oscP5.*;
 import netP5.*;
 
 OscP5 oscP5;
@@ -14,7 +14,7 @@ myRemoteLocation = new NetAddress("127.0.0.1",12000);
 }
 
 void draw() {
-background(0); 
+background(0);
 }
 
 
@@ -23,9 +23,9 @@ void oscEvent(OscMessage theOscMessage) {
 if(theOscMessage.checkAddrPattern("/first")==true) {
 if(theOscMessage.checkTypetag("i")) {
 
-int firstValue = theOscMessage.get(0).intValue(); 
+int firstValue = theOscMessage.get(0).intValue();
 println(" values: "+firstValue);
 return;
-} 
-} 
+}
+}
 }
