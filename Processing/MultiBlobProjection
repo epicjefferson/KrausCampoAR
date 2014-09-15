@@ -1,0 +1,127 @@
+import deadpixel.keystone.*;
+PGraphics offscreen;
+Keystone ks;
+CornerPinSurface surface;
+
+
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscP5;
+NetAddress myRemoteLocation;
+int blob;
+//int x;
+int circle1=0;
+int circle2=0;
+int blob_number=30;
+
+class Blob{
+boolean has_this_blob_been_created;
+int xvalue;        
+int yvalue;
+int rvalue;
+int gvalue;
+int bvalue;
+}
+
+Blob[] b = new Blob[30];
+
+//int blob_index = 0;
+
+void setup() {
+size(800,600,P3D);
+ks = new Keystone(this);
+  surface = ks.createCornerPinSurface(400, 300, 20);
+  offscreen = createGraphics(400, 300, P3D);
+frameRate(25);
+/* start oscP5, listening for incoming messages at port 10000 */
+oscP5 = new OscP5(this,10000);
+
+myRemoteLocation = new NetAddress("127.0.0.1",10000);
+for(int i=0; i<blob_number;i++){
+  
+       b[i] = new Blob();
+       b[i].has_this_blob_been_created = false;
+}
+
+
+}
+
+void draw() {
+
+PVector surfaceMouse = surface.getTransformedMouse();
+
+offscreen.beginDraw();
+background(0);
+
+int blob_index = 0;
+
+for(blob_index = 0; blob_index< blob_number; blob_index++){
+       if(b[blob_index].has_this_blob_been_created){
+         strokeWeight(4);
+               stroke(b[blob_index].rvalue,b[blob_index].gvalue,b[blob_index].bvalue);
+               ellipse(b[blob_index].xvalue, b[blob_index].yvalue,50,50);
+           
+           
+              // line( b[blob_index].xvalue-1,b[blob_index].yvalue-1, b[blob_index].xvalue, b[blob_index].yvalue); 
+       }
+       for(circle1 = 0; circle1<blob_number; circle1++){
+       if(b[circle1].has_this_blob_been_created){
+               for(circle2 = 0; circle2<blob_number; circle2++){
+                       if(b[circle2].has_this_blob_been_created){
+                           strokeWeight(2);
+                           stroke(220);
+                    
+                            line(b[circle1].xvalue,b[circle1].yvalue, b[circle2].xvalue, b[circle2].yvalue);
+                       }
+               }
+       }
+}
+
+}
+//background(0); 
+offscreen.endDraw();
+surface.render(offscreen);
+}
+
+
+
+
+
+void oscEvent(OscMessage theOscMessage) {
+
+
+
+if(theOscMessage.checkAddrPattern("/blobs/pos/x/y/r/g/b")==true) {
+  
+if(theOscMessage.checkTypetag("iiiiii")){
+
+blob = theOscMessage.get(0).intValue();
+
+
+b[blob].has_this_blob_been_created = true;
+
+println(" blob: "+blob);
+b[blob].xvalue = theOscMessage.get(1).intValue();
+println(" xpos: "+b[blob].xvalue);
+
+b[blob].yvalue = theOscMessage.get(2).intValue();
+println(" ypos: "+b[blob].yvalue);
+
+b[blob].rvalue = theOscMessage.get(3).intValue();
+println(" rvalues:"+b[blob].rvalue);
+
+b[blob].gvalue = theOscMessage.get(4).intValue();
+println(" gvalues: "+b[blob].gvalue);
+
+b[blob].bvalue = theOscMessage.get(5).intValue();
+println(" bvalues: "+b[blob].bvalue);
+}
+
+
+}
+return;
+
+}
+
+
